@@ -229,12 +229,20 @@ Thread32First(
 
 DWORD WINAPI GetCurrentThreadId(VOID)
 {
+#if defined(_M_X64) || defined(__x86_64__)
     return HandleToUlong(((CLIENT_ID*)((LPBYTE)NtCurrentTeb() + 0x40 /* ClientId */))->UniqueThread);
+#else
+    return HandleToUlong(((CLIENT_ID*)((LPBYTE)NtCurrentTeb() + 0x20 /* ClientId */))->UniqueThread);
+#endif
 }
 
 DWORD WINAPI GetCurrentProcessId(VOID)
 {
+#if defined(_M_X64) || defined(__x86_64__)
     return HandleToUlong(((CLIENT_ID*)((LPBYTE)NtCurrentTeb() + 0x40 /* ClientId */))->UniqueProcess);
+#else
+    return HandleToUlong(((CLIENT_ID*)((LPBYTE)NtCurrentTeb() + 0x20 /* ClientId */))->UniqueProcess);
+#endif
 }
 
 PVOID WINAPI HeapAlloc(

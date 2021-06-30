@@ -210,7 +210,11 @@ NtDelayExecution(
     _In_ LARGE_INTEGER *Interval
 );
 #define NtCurrentPeb() (NtCurrentTeb()->ProcessEnvironmentBlock)
+#if defined(_M_X64) || defined(__x86_64__)
 #define RtlGetProcessHeap() (*(PVOID*)((LPBYTE)NtCurrentPeb() + 0x30))
+#else
+#define RtlGetProcessHeap() (*(PVOID*)((LPBYTE)NtCurrentPeb() + 0x18))
+#endif
 typedef struct _SYSTEM_BASIC_INFORMATION2
 {
     ULONG Reserved;
